@@ -2,7 +2,7 @@ const Claim = require('../models/Claim');
 const getClaims = async(req,res) => {
     try{
         const claims = await Claim.find({userId: req.user.id});
-        res.json(tasks);
+        res.json(claims);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -12,7 +12,7 @@ const addClaim = async (req,res) => {
     const { policyNumber, incidentDate, description, claimType} = req.body;
     try {
         const claim = await Claim.create({userId: req.user.id, policyNumber, incidentDate, description,claimType});
-        res.status(201).json(task);
+        res.status(201).json(claim);
     } catch(error){
         res.status(500).json({ message: error.message});
     }
