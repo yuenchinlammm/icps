@@ -1,51 +1,39 @@
 const Claim = require('../models/Claim');
-const getClaims = async(req,res) => {
-    try{
-        const claims = await Claim.find({userId: req.user.id});
-        res.json(claims);
-    } catch (error) {
-        res.status(500).json({message: error.message});
-    }
+
+exports.createClaim = async (req,res) => {
+  const payload = {
+    userId: req.user.id,
+    policyNumber: req.body.policyNumber,
+    incidentDate: req.body.incidentDate,
+    claimType: req.body.claimType,
+    description: req.body.description,
+    status: 'Draft'
+  };
+  const claim = await Claim.create(payload);
+  res.status(201).json(claim);
 };
 
-const addClaim = async (req,res) => {
-    const { policyNumber, incidentDate, description, claimType} = req.body;
-    try {
-        const claim = await Claim.create({userId: req.user.id, policyNumber, incidentDate, description,claimType});
-        res.status(201).json(claim);
-    } catch(error){
-        res.status(500).json({ message: error.message});
-    }
+exports.listMyClaims = async (req,res) => {
+  const claims = await Claim.find({ userId: req.user.id }).sort({ updatedAt: -1 });
+  res.json(claims);
 };
 
-const updateClaim = async (req, res) => {
-    const { policyNumber, incidentDate, description,claimType } =req.body;
-    try {
-        const claim = await Claim.findById(req.params.id);
-        if(!claim) return res.status(404).json({ message: 'Claim not found'});
-
-        claim.policyNumber = policyNumber || claim.policyNumber;
-        claim.incidentDate = incidentDate || claim.incidentDate;
-        claim.description = description || claim.description;
-        claim.claimType = claimType || claim.claimType;
-
-        const updatedClaim = await claim.save();
-        res.json(updatedClaim);
-    } catch (error){
-        res.status(500).json({ message: error.message});
-    }
+exports.getMyClaim = async (req,res) => {
+  // req.claim provided by ownership middleware
+  res.json(req.claim);
 };
 
-const deleteClaim = async (req,res) => {
-    try {
-        const claim = await Claim.findById(req.params.id);
-        if(!claim) return res.status(404).json({ message: 'Claim not found'});
-
-        await claim.remove();
-        res.json({ message: 'Claim deleted'});
-    } catch (error){
-        res.status(500).json({ message: error.message});
-    }
+exports.updateMyClaim = async (req,res) => {
+  const updates = (({ policyNumber, incidentDate, claimType, description, status }) =>
+    ({ policyNumber, incidentDate, claimType, description, status }))(req.body);
+  // status guard already ran
+  Object.assign(req.claim, updates);
+  await req.claim.save();
+  res.json(req.claim);
 };
 
-module.exports = { getClaims, addClaim, updateClaim, deleteClaim};
+exports.deleteMyClaim = async (req,res) => {
+  // status guard already ran
+  await req.claim.deleteOne();
+  res.status(204).end();
+}; 
