@@ -26,10 +26,10 @@ describe('createClaim Function Test', () => {
     status: 'Draft'
   };
 
-    // Mock task that would be created
+    // Mock claim that would be created
     const createdClaim = { _id: new mongoose.Types.ObjectId(), ...req.body, userId: req.user.id };
 
-    // Stub Task.create to return the createdTask
+    // Stub Claim.create to return the createdClaim
     const createStub = sinon.stub(Claim, 'create').resolves(createdClaim);
 
     // Mock response object
@@ -50,3 +50,37 @@ describe('createClaim Function Test', () => {
     createStub.restore();
   });
   
+  it('should return 500 if an error occurs', async () => {
+    // Stub Task.create to throw an error
+    const createStub = sinon.stub(Claim, 'create').throws(new Error('DB Error'));
+
+    // Mock request data
+     const payload = {
+    userId: req.user.id,
+    policyNumber: req.body.policyNumber,
+    incidentDate: req.body.incidentDate,
+    claimType: req.body.claimType,
+    description: req.body.description,
+    status: 'Draft'
+    };
+
+    // Mock response object
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy()
+    };
+
+    // Call function
+    await createClaim(req, res);
+
+    // Assertions
+    expect(res.status.calledWith(500)).to.be.true;
+    expect(res.json.calledWithMatch({ message: 'DB Error' })).to.be.true;
+
+    // Restore stubbed methods
+    createStub.restore();
+  });
+
+});
+
+
