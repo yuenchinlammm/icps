@@ -1,7 +1,7 @@
 {
   "name": "icps-backend",
   "version": "1.0.0",
-  "description": "Backend for Task Manager App",
+  "description": "Backend for Insurance Claim Processiong System",
   "main": "server.js",
   "scripts": {
     "test": "mocha",
