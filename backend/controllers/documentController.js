@@ -1,49 +1,50 @@
+const path = require('path');
+const fs = require('fs');
+const Claim = require('../models/Claim');
 const Document = require('../models/Document');
-const getDocument = async(req,res) => {
-    try{
-        const documents = await Document.find({userId: req.user.id});
-        res.json(documents);
-    } catch (error) {
-        res.status(500).json({message: error.message});
-    }
+
+exports.uploadToClaim = async (req,res) => {
+  const file = req.file; // from multer
+  if (!file) return res.status(400).json({ message: 'No file' });
+
+  const doc = await Document.create({
+    claimId: req.claim._id,
+    userId: req.user.id,
+    fileName: file.originalname,
+    mimeType: file.mimetype,
+    size: file.size,
+    storagePath: file.path
+  });
+  res.status(201).json(doc);
 };
 
-const addDocument = async (req,res) => {
-    const { policyNumber, documentType} = req.body;
-    try {
-        const document = await document.create({userId: req.user.id, policyNumber, documentType});
-        res.status(201).json(document);
-    } catch(error){
-        res.status(500).json({ message: error.message});
-    }
+exports.listForClaim = async (req,res) => {
+  const docs = await Document.find({ claimId: req.claim._id, userId: req.user.id }).sort({ uploadedAt: -1 });
+  res.json(docs);
 };
 
-const updateDocument = async (req, res) => {
-    const { policyNumber, documentType, } =req.body;
-    try {
-        const document = await document.findById(req.params.id);
-        if(!document) return res.status(404).json({ message: 'Document not found'});
-
-        document.policyNumber = policyNumber || document.policyNumber;
-        document.documentType = documentType || document.documentType;
-
-        const updatedDocument = await document.save();
-        res.json(updatedDocument);
-    } catch (error){
-        res.status(500).json({ message: error.message});
-    }
+exports.preview = async (req,res) => {
+  const doc = req.document;
+  res.setHeader('Content-Type', doc.mimeType);
+  fs.createReadStream(doc.storagePath).pipe(res);
 };
 
-const deleteDocument = async (req,res) => {
-    try {
-        const document = await Document.findById(req.params.id);
-        if(!document) return res.status(404).json({ message: 'Document not found'});
+exports.replace = async (req,res) => {
+  const file = req.file;
+  if (!file) return res.status(400).json({ message: 'No file' });
 
-        await document.remove();
-        res.json({ message: 'Document deleted'});
-    } catch (error){
-        res.status(500).json({ message: error.message});
-    }
+  // remove old file
+  try { fs.unlinkSync(req.document.storagePath); } catch(e) {}
+  req.document.fileName = file.originalname;
+  req.document.mimeType = file.mimetype;
+  req.document.size = file.size;
+  req.document.storagePath = file.path;
+  await req.document.save();
+  res.json(req.document);
 };
 
-module.exports = { getDocument, addDocument, updateDocument, deleteDocument};
+exports.remove = async (req,res) => {
+  try { fs.unlinkSync(req.document.storagePath); } catch(e) {}
+  await req.document.deleteOne();
+  res.status(204).end();
+};
