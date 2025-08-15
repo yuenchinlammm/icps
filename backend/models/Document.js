@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const DocumentSchema = new mongoose.Schema({
   claimId: { type: mongoose.Schema.Types.ObjectId, ref: 'Claim', index: true, required: true },
   userId:  { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true, required: true },
