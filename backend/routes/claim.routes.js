@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const { createClaimRules, idParamRule } = require('../validators/claim.validators');
-const validate = require('../middlewares/validate');
-const { ownsClaim } = require('../middlewares/ownership');
-const { allowDraftPendingOnly } = require('../middlewares/statusGuard');
+const validate = require('../middleware/validate');
+const { ownsClaim } = require('../middleware/ownership');
+const { allowDraftPendingOnly } = require('../middleware/statusGuard');
 const Claim = require('../models/Claim');
 const ctrl = require('../controllers/claim.controller');
 
-const requireAuth = require('../middlewares/authMiddleware');
+const requireAuth = require('../middleware/authMiddleware');
 
 router.use(requireAuth);
 
