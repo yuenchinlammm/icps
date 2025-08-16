@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const { claimIdParamRule, docIdParamRule } = require('../validators/document.validators');
-const validate = require('../middlewares/validate');
-const { ownsClaim, ownsDocument } = require('../middlewares/ownership');
+const validate = require('../middleware/validate');
+const { ownsClaim, ownsDocument } = require('../middleware/ownership');
 const { upload } = require('../libs/upload');
 const Claim = require('../models/Claim');
 const Document = require('../models/Document');
 const ctrl = require('../controllers/documentController');
-const requireAuth = require('../middlewares/authMiddleware');
+const requireAuth = require('../middleware/auth');
 
 router.use(requireAuth);
 
