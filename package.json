@@ -1,5 +1,5 @@
 {
-  "name": "icps",
+  "name": "icps-frontend",
   "version": "1.0.0",
   "description": "Complete MERN Insurance Claim Processing System ",
   "scripts": {
