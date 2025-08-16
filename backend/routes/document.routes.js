@@ -1,4 +1,5 @@
-const router = require('express-validator').Router();
+const express = require('express');
+const router = express.Router();
 const { claimIdParamRule, docIdParamRule } = require('../validators/document.validators');
 const validate = require('../middleware/validate');
 const { ownsClaim, ownsDocument } = require('../middleware/ownership');
