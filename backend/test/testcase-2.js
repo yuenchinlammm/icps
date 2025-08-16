@@ -5,7 +5,7 @@ const app = require('../server');
 const connectDB = require('../config/db');
 const mongoose = require('mongoose');
 const sinon = require('sinon');
-const Task = require('../models/Claim');
+const Claim = require('../models/Claim');
 const { createClaim,listMyClaim, getMyClaim, updateMyClaim ,deleteMyClaim } = require('../controllers/claimController');
 const { expect } = chai;
 
@@ -45,7 +45,7 @@ describe('DeleteClaim Function Test', () => {
 
   it('should return 404 if task is not found', async () => {
     // Stub Claim.findById to return null
-    const findByIdStub = sinon.stub(Task, 'findById').resolves(null);
+    const findByIdStub = sinon.stub(Claim, 'findById').resolves(null);
 
     // Mock request data
     const req = { params: { id: new mongoose.Types.ObjectId().toString() } };
