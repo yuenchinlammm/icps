@@ -6,7 +6,7 @@ on:
 
 jobs: test
   test:test job
-    name: RunTests
+    name: Run Tests
     runs-on: self-hosted
 
 
