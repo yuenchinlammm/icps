@@ -1,11 +1,11 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const http = require('http');
-const app = require('../server'); 
+const app = require('../app'); 
 const connectDB = require('../config/db');
 const mongoose = require('mongoose');
 const sinon = require('sinon');
-const Task = require('../models/Claim');
+const claim = require('../models/Claim');
 const { createClaim,listMyClaim, getMyClaim, updateMyClaim ,deleteMyClaim } = require('../controllers/claimController');
 const { expect } = chai;
 
