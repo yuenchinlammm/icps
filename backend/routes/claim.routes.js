@@ -1,4 +1,4 @@
-const router = require('express');
+const express = require('express');
 const router = express.Router();
 const { createClaimRules, idParamRule } = require('../validators/claim.validators');
 const validate = require('../middleware/validate');
