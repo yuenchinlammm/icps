@@ -5,7 +5,7 @@ const { ownsClaim, ownsDocument } = require('../middlewares/ownership');
 const { upload } = require('../libs/upload');
 const Claim = require('../models/Claim');
 const Document = require('../models/Document');
-const ctrl = require('../controllers/document.controller');
+const ctrl = require('../controllers/documentController');
 const requireAuth = require('../middlewares/authMiddleware');
 
 router.use(requireAuth);
