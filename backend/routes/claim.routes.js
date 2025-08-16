@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const router = require('express-validator').Router();
 const { createClaimRules, idParamRule } = require('../validators/claim.validators');
 const validate = require('../middleware/validate');
 const { ownsClaim } = require('../middleware/ownership');
