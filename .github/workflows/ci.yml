@@ -4,8 +4,8 @@ on:
    branches:
       - main  # Trigger CI on pushes to the main branch
 
-jobs: test
-  test:test job
+jobs: 
+  test:
     name: Run Tests
     runs-on: self-hosted
 
