@@ -5,7 +5,7 @@ const { ownsClaim } = require('../middleware/ownership');
 const { allowDraftPendingOnly } = require('../middleware/statusGuard');
 const Claim = require('../models/Claim');
 const ctrl = require('../controllers/claimController');
-const requireAuth = require('../middleware/authMiddleware');
+const requireAuth = require('../middleware/auth');
 
 router.use(requireAuth);
 
